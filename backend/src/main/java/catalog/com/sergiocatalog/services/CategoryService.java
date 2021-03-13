@@ -1,6 +1,7 @@
 package catalog.com.sergiocatalog.services;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,6 +12,7 @@ import catalog.com.sergiocatalog.dto.CategoryDTO;
 import catalog.com.sergiocatalog.entities.Category;
 //import catalog.com.sergiocatalog.resources.CategoryResource;
 import catalog.com.sergiocatalog.respositories.CategoryRepository;
+import catalog.com.sergiocatalog.services.exceptions.EntityNotFoundException;
 
 @Service
 public class CategoryService {
@@ -30,6 +32,13 @@ public class CategoryService {
 			listDto.add(new CategoryDTO(cat));
 		}*/
 		
+	}
+
+	@Transactional(readOnly = true)
+	public CategoryDTO findById(Long id) {
+		Optional<Category> obj = repository.findById(id);
+		Category entity = obj.orElseThrow(() -> new EntityNotFoundException("Entity not found."));		
+		return new CategoryDTO(entity);
 	}
 	
 }
